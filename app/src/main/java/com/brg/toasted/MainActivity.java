@@ -1,20 +1,31 @@
 package com.brg.toasted;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.View;
+import android.widget.Button;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(new GameView(this));
+        final Button buttonPlay = (Button)findViewById(R.id.buttonPlay);
+        buttonPlay.setOnClickListener(this);
+    }
+
+
+
+
+    @Override
+    public void onClick(View view) {
+        Intent i = new Intent(this, GameActivity.class);
+        startActivity(i);
+        finish();
+
+
     }
 }
