@@ -27,6 +27,7 @@ public class Player {
 
 
         sprite = BitmapFactory.decodeResource(context.getResources(), R.drawable.toastplayer);
+        sprite = Bitmap.createScaledBitmap(sprite,200,200,false);
         jumping = false;
 
         maxY = screenH - sprite.getHeight()-50;
