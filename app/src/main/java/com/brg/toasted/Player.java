@@ -8,7 +8,7 @@ public class Player {
     private Bitmap sprite;
     private int x,y;
     private int vx,vy;
-    private boolean jumping;
+    private boolean down;
 
     private final int JUMPSPEED = 120;
     private final int GRAVITY = -60;
@@ -28,7 +28,9 @@ public class Player {
 
         sprite = BitmapFactory.decodeResource(context.getResources(), R.drawable.toastplayer);
         sprite = Bitmap.createScaledBitmap(sprite,200,200,false);
-        jumping = false;
+
+
+        down = false;
 
         maxY = screenH - sprite.getHeight()-50;
         minY = 0;
@@ -38,18 +40,8 @@ public class Player {
     }
 
     public void update(){
-        if(jumping){
-            y -= JUMPSPEED;
-        }else{
-            y -= GRAVITY;
-        }
 
-        if(y < minY) {
-            y = minY;
-        }
-        if(y >maxY) {
-            y = maxY;
-        }
+
     }
 
     public int getX(){
@@ -61,13 +53,16 @@ public class Player {
     public Bitmap getSprite(){
         return sprite;
     }
+    public void setLane(){
 
-    public void setJumping(){
-        jumping = true;
+
+    }
+    public void setDown(){
+        down = true;
     }
 
-    public void stopJumping(){
-        jumping = false;
+    public void setUp(){
+        down = false;
     }
 
 
