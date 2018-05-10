@@ -34,6 +34,7 @@ public class GameView extends SurfaceView implements Runnable {
     private long m_startTime;
     private long m_deltaTime;
     private long m_fps;
+    private int m_playLane=1;
 
     private Bitmap bg;
     private Bitmap groundTiles;
@@ -56,7 +57,7 @@ public class GameView extends SurfaceView implements Runnable {
         bg = BitmapFactory.decodeResource(context.getResources(), R.drawable.backgroundimage);
         bg = Bitmap.createScaledBitmap(bg,screenW,screenH,false);
         groundTiles = BitmapFactory.decodeResource(context.getResources(), R.drawable.kitchentiles);
-        groundTiles = Bitmap.createScaledBitmap(groundTiles,screenW/2,screenH/2,false);
+        groundTiles = Bitmap.createScaledBitmap(groundTiles,screenW/2,screenH/3,false);
     }
 
     @Override
@@ -85,7 +86,12 @@ public class GameView extends SurfaceView implements Runnable {
 //                break;
             //touch screen
             case MotionEvent.ACTION_DOWN:
-                m_player.setLane();
+                if(m_player.getDown()){
+                    m_playLane++;
+                }else{
+                    m_playLane--;
+                }
+                m_player.setLane(m_playLane);
                 break;
         }
 
@@ -103,10 +109,9 @@ public class GameView extends SurfaceView implements Runnable {
 
             m_canvas.drawColor(Color.argb(255,0,0,0));
             m_canvas.drawBitmap(bg,0,0,m_paint);
-            m_canvas.drawBitmap(groundTiles,0,400,m_paint);
-            m_canvas.drawBitmap(m_player.getSprite(),
-                    m_player.getX(), m_player.getY(),
-                    m_paint);
+            m_canvas.drawBitmap(groundTiles,0,m_canvas.getHeight()-groundTiles.getHeight(),m_paint);
+            m_canvas.drawBitmap(groundTiles,m_canvas.getWidth()/2,m_canvas.getHeight()-groundTiles.getHeight(),m_paint);
+            m_canvas.drawBitmap(m_player.getSprite(),m_player.getX(), m_player.getY(),m_paint);
 
             //TODO: add draw
 

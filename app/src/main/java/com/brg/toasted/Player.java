@@ -13,30 +13,29 @@ public class Player {
     private final int JUMPSPEED = 120;
     private final int GRAVITY = -60;
 
-    private int minY;
-    private int maxY;
-    private int minX;
-    private int maxX;
+    private int lane1;
+    private int lane2;
+    private int lane3;
+
+
 
 
     public Player(Context context, int screenW, int screenH){
-        x = 10;
-        y = 10;
-        vx = 0;
-        vy = 0;
+        lane1= screenW/4 + 100;
+        lane2 = screenW/4 + 200;
+        lane3 = screenW/4 + 300;
 
+
+
+        x = screenH/4;
+        y = lane1;
 
         sprite = BitmapFactory.decodeResource(context.getResources(), R.drawable.toastplayer);
         sprite = Bitmap.createScaledBitmap(sprite,200,200,false);
 
+        down = true;
 
-        down = false;
 
-        maxY = screenH - sprite.getHeight()-50;
-        minY = 0;
-
-        maxX = screenW - sprite.getWidth();
-        minX = 0;
     }
 
     public void update(){
@@ -53,12 +52,23 @@ public class Player {
     public Bitmap getSprite(){
         return sprite;
     }
-    public void setLane(){
-
+    public void setLane(int lanenum){
+        switch(lanenum){
+            case 1: y=lane1;
+            setDown();
+            break;
+            case 2: y=lane2;
+            break;
+            case 3: y=lane3;
+            setUp();
+        }
 
     }
     public void setDown(){
         down = true;
+    }
+    public boolean getDown(){
+        return down;
     }
 
     public void setUp(){
