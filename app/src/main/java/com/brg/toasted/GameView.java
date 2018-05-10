@@ -1,6 +1,8 @@
 package com.brg.toasted;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -33,6 +35,9 @@ public class GameView extends SurfaceView implements Runnable {
     private long m_deltaTime;
     private long m_fps;
 
+    private Bitmap bg;
+    private Bitmap groundTiles;
+
 //    private LevelManager m_lm;
 //    private Viewport m_vp;
 //    public InputController m_ic
@@ -46,6 +51,12 @@ public class GameView extends SurfaceView implements Runnable {
 
        m_player = new Player(context,screenW,screenH);
 //        m_enemy = new Enemy(context,screenW,screenH);
+
+
+        bg = BitmapFactory.decodeResource(context.getResources(), R.drawable.backgroundimage);
+        bg = Bitmap.createScaledBitmap(bg,screenW,screenH,false);
+        groundTiles = BitmapFactory.decodeResource(context.getResources(), R.drawable.kitchentiles);
+        groundTiles = Bitmap.createScaledBitmap(groundTiles,screenW/2,screenH/2,false);
     }
 
     @Override
@@ -60,6 +71,7 @@ public class GameView extends SurfaceView implements Runnable {
             if(m_deltaTime >= 1){
                 m_fps = 1000 / m_deltaTime;
             }
+
         }
 
     }
@@ -68,12 +80,12 @@ public class GameView extends SurfaceView implements Runnable {
 
         switch(motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             //lift finger
-            case MotionEvent.ACTION_UP:
-                m_player.stopJumping();
-                break;
+//            case MotionEvent.ACTION_UP:
+//                m_player.setLane();
+//                break;
             //touch screen
             case MotionEvent.ACTION_DOWN:
-                m_player.setJumping();
+                m_player.setLane();
                 break;
         }
 
@@ -81,6 +93,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void update(){
+
         m_player.update();
     }
 
@@ -89,10 +102,12 @@ public class GameView extends SurfaceView implements Runnable {
             m_canvas = m_holder.lockCanvas();
 
             m_canvas.drawColor(Color.argb(255,0,0,0));
-
+            m_canvas.drawBitmap(bg,0,0,m_paint);
+            m_canvas.drawBitmap(groundTiles,0,400,m_paint);
             m_canvas.drawBitmap(m_player.getSprite(),
                     m_player.getX(), m_player.getY(),
                     m_paint);
+
             //TODO: add draw
 
             m_holder.unlockCanvasAndPost(m_canvas);
