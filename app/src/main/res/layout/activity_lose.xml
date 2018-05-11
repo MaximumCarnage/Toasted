@@ -4,6 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f0000f"
     tools:context=".LoseActivity">
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="267dp"
+        android:layout_height="249dp"
+        app:srcCompat="@drawable/menutoastdie"
+        tools:layout_editor_absoluteX="44dp"
+        tools:layout_editor_absoluteY="149dp" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="playagain"
+        tools:layout_editor_absoluteX="78dp"
+        tools:layout_editor_absoluteY="421dp" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="menu"
+        tools:layout_editor_absoluteX="189dp"
+        tools:layout_editor_absoluteY="421dp" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="385dp"
+        android:layout_height="383dp"
+        app:srcCompat="@drawable/firedie"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="204dp" />
 
 </android.support.constraint.ConstraintLayout>
