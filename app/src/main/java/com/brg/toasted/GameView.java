@@ -25,6 +25,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Thread m_gameThread = null;
 
    private Player m_player;
+   private Enemy m_testenemy;
 //    private Enemy m_enemy;
 
     private Paint m_paint;
@@ -51,6 +52,7 @@ public class GameView extends SurfaceView implements Runnable {
         m_paint = new Paint();
 
        m_player = new Player(context,screenW,screenH);
+       m_testenemy = new Enemy(context,screenW,screenH,"pepper");
 //        m_enemy = new Enemy(context,screenW,screenH);
 
 
@@ -100,7 +102,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     public void update(){
 
-        m_player.update();
+        m_testenemy.update();
     }
 
     private void draw(){
@@ -112,6 +114,7 @@ public class GameView extends SurfaceView implements Runnable {
             m_canvas.drawBitmap(groundTiles,0,m_canvas.getHeight()-groundTiles.getHeight(),m_paint);
             m_canvas.drawBitmap(groundTiles,m_canvas.getWidth()/2,m_canvas.getHeight()-groundTiles.getHeight(),m_paint);
             m_canvas.drawBitmap(m_player.getSprite(),m_player.getX(), m_player.getY(),m_paint);
+            m_canvas.drawBitmap(m_testenemy.getSprite(),m_testenemy.getX(),m_testenemy.getY(),m_paint);
 
             //TODO: add draw
 

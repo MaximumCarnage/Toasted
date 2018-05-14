@@ -7,11 +7,7 @@ public class Player {
 
     private Bitmap sprite;
     private int x,y;
-    private int vx,vy;
     private boolean down;
-
-    private final int JUMPSPEED = 120;
-    private final int GRAVITY = -60;
 
     private int lane1;
     private int lane2;
@@ -38,10 +34,6 @@ public class Player {
 
     }
 
-    public void update(){
-
-
-    }
 
     public int getX(){
         return x;
