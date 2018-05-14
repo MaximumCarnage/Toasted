@@ -19,7 +19,8 @@
         <activity
             android:name=".GameActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".LoseActivity" />
+        <activity android:name=".LoseActivity"
+                  android:hardwareAccelerated="false" />
         <activity android:name=".WinActivity"></activity>
     </application>
 
