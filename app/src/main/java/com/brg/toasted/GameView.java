@@ -53,9 +53,9 @@ public class GameView extends SurfaceView implements Runnable {
 
        m_player = new Player(context,screenW,screenH);
        for(int i = 0; i < 1; i++){
-           m_enemies.add(new Enemy(context,screenW,screenH,"pepper"));
+           m_enemies.add(new Enemy(context,screenW,screenH,"jalapenosprite"));
        }
-//        m_enemy = new Enemy(context,screenW,screenH);
+
 
 
         bg = BitmapFactory.decodeResource(context.getResources(), R.drawable.backgroundimage);
@@ -128,6 +128,10 @@ public class GameView extends SurfaceView implements Runnable {
 
             m_holder.unlockCanvasAndPost(m_canvas);
         }
+    }
+
+    public void enemyspawnSystem(){
+
     }
 
     public void pause(){

@@ -30,10 +30,10 @@ public class Enemy {
         name = spritename;
 
         playWidth = screenW;
+        int resID = context.getResources().getIdentifier(spritename,"drawable", context.getPackageName());
 
 
-
-        sprite = BitmapFactory.decodeResource(context.getResources(), R.drawable.jalapenosprite);
+        sprite = BitmapFactory.decodeResource(context.getResources(), resID);
         sprite = Bitmap.createScaledBitmap(sprite,150,150,false);
 
         x =  screenW-sprite.getWidth();
