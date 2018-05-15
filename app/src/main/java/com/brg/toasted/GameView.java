@@ -9,14 +9,12 @@ import android.graphics.Paint;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
+
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+
+
+import java.util.List;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -25,6 +23,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Thread m_gameThread = null;
 
    private Player m_player;
+   private List m_enemies;
    private Enemy m_testenemy;
 //    private Enemy m_enemy;
 
@@ -52,6 +51,9 @@ public class GameView extends SurfaceView implements Runnable {
         m_paint = new Paint();
 
        m_player = new Player(context,screenW,screenH);
+       for(int i = 0; i < 3; i++){
+           m_enemies.add(new Enemy(context,screenW,screenH,"pepper"));
+       }
        m_testenemy = new Enemy(context,screenW,screenH,"pepper");
 //        m_enemy = new Enemy(context,screenW,screenH);
 
@@ -74,7 +76,6 @@ public class GameView extends SurfaceView implements Runnable {
             if(m_deltaTime >= 1){
                 m_fps = 1000 / m_deltaTime;
             }
-
         }
 
     }
@@ -101,8 +102,10 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void update(){
-
         m_testenemy.update();
+        if(m_player.Collision(m_testenemy)){
+            Log.i("collision", "Player Collided");
+        }
     }
 
     private void draw(){
@@ -113,8 +116,10 @@ public class GameView extends SurfaceView implements Runnable {
             m_canvas.drawBitmap(bg,0,0,m_paint);
             m_canvas.drawBitmap(groundTiles,0,m_canvas.getHeight()-groundTiles.getHeight(),m_paint);
             m_canvas.drawBitmap(groundTiles,m_canvas.getWidth()/2,m_canvas.getHeight()-groundTiles.getHeight(),m_paint);
-            m_canvas.drawBitmap(m_player.getSprite(),m_player.getX(), m_player.getY(),m_paint);
             m_canvas.drawBitmap(m_testenemy.getSprite(),m_testenemy.getX(),m_testenemy.getY(),m_paint);
+
+
+            m_canvas.drawBitmap(m_player.getSprite(),m_player.getX(), m_player.getY(),m_paint);
 
             //TODO: add draw
 
@@ -135,4 +140,6 @@ public class GameView extends SurfaceView implements Runnable {
         m_gameThread = new Thread(this);
         m_gameThread.start();
     }
+
+
 }
