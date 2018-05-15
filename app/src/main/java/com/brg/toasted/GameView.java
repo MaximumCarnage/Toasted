@@ -9,14 +9,13 @@ import android.graphics.Paint;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
+
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -25,6 +24,8 @@ public class GameView extends SurfaceView implements Runnable {
     private Thread m_gameThread = null;
 
    private Player m_player;
+   private List<Enemy> m_enemies = new ArrayList<>();
+
 //    private Enemy m_enemy;
 
     private Paint m_paint;
@@ -34,6 +35,7 @@ public class GameView extends SurfaceView implements Runnable {
     private long m_startTime;
     private long m_deltaTime;
     private long m_fps;
+    private int m_playLane=1;
 
     private Bitmap bg;
     private Bitmap groundTiles;
@@ -50,13 +52,16 @@ public class GameView extends SurfaceView implements Runnable {
         m_paint = new Paint();
 
        m_player = new Player(context,screenW,screenH);
-//        m_enemy = new Enemy(context,screenW,screenH);
+       for(int i = 0; i < 1; i++){
+           m_enemies.add(new Enemy(context,screenW,screenH,"jalapenosprite"));
+       }
+
 
 
         bg = BitmapFactory.decodeResource(context.getResources(), R.drawable.backgroundimage);
         bg = Bitmap.createScaledBitmap(bg,screenW,screenH,false);
         groundTiles = BitmapFactory.decodeResource(context.getResources(), R.drawable.kitchentiles);
-        groundTiles = Bitmap.createScaledBitmap(groundTiles,screenW/2,screenH/2,false);
+        groundTiles = Bitmap.createScaledBitmap(groundTiles,screenW/2,screenH/3,false);
     }
 
     @Override
@@ -71,7 +76,6 @@ public class GameView extends SurfaceView implements Runnable {
             if(m_deltaTime >= 1){
                 m_fps = 1000 / m_deltaTime;
             }
-
         }
 
     }
@@ -85,7 +89,12 @@ public class GameView extends SurfaceView implements Runnable {
 //                break;
             //touch screen
             case MotionEvent.ACTION_DOWN:
-                m_player.setLane();
+                if(m_player.getDown()){
+                    m_playLane++;
+                }else{
+                    m_playLane--;
+                }
+                m_player.setLane(m_playLane);
                 break;
         }
 
@@ -93,8 +102,13 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void update(){
+        for(int i = 0; i < m_enemies.size(); i++){
+            m_enemies.get(0).update();
+            if(m_player.Collision(m_enemies.get(0))){
+                Log.i("collision", "Player Collided");
+            }
+        }
 
-        m_player.update();
     }
 
     private void draw(){
@@ -103,15 +117,21 @@ public class GameView extends SurfaceView implements Runnable {
 
             m_canvas.drawColor(Color.argb(255,0,0,0));
             m_canvas.drawBitmap(bg,0,0,m_paint);
-            m_canvas.drawBitmap(groundTiles,0,400,m_paint);
-            m_canvas.drawBitmap(m_player.getSprite(),
-                    m_player.getX(), m_player.getY(),
-                    m_paint);
+            m_canvas.drawBitmap(groundTiles,0,m_canvas.getHeight()-groundTiles.getHeight(),m_paint);
+            m_canvas.drawBitmap(groundTiles,m_canvas.getWidth()/2,m_canvas.getHeight()-groundTiles.getHeight(),m_paint);
+            for(int i = 0; i < m_enemies.size(); i++) {
+                m_canvas.drawBitmap(m_enemies.get(0).getSprite(),m_enemies.get(0).getX(),m_enemies.get(0).getY(),m_paint);
+            }
 
-            //TODO: add draw
+            m_canvas.drawBitmap(m_player.getSprite(),m_player.getX(), m_player.getY(),m_paint);
+            
 
             m_holder.unlockCanvasAndPost(m_canvas);
         }
+    }
+
+    public void enemyspawnSystem(){
+
     }
 
     public void pause(){
@@ -127,4 +147,6 @@ public class GameView extends SurfaceView implements Runnable {
         m_gameThread = new Thread(this);
         m_gameThread.start();
     }
+
+
 }
