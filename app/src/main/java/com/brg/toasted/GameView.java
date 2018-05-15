@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameView extends SurfaceView implements Runnable {
@@ -23,8 +24,8 @@ public class GameView extends SurfaceView implements Runnable {
     private Thread m_gameThread = null;
 
    private Player m_player;
-   private List m_enemies;
-   private Enemy m_testenemy;
+   private List<Enemy> m_enemies = new ArrayList<>();
+
 //    private Enemy m_enemy;
 
     private Paint m_paint;
@@ -51,10 +52,9 @@ public class GameView extends SurfaceView implements Runnable {
         m_paint = new Paint();
 
        m_player = new Player(context,screenW,screenH);
-       for(int i = 0; i < 3; i++){
+       for(int i = 0; i < 1; i++){
            m_enemies.add(new Enemy(context,screenW,screenH,"pepper"));
        }
-       m_testenemy = new Enemy(context,screenW,screenH,"pepper");
 //        m_enemy = new Enemy(context,screenW,screenH);
 
 
@@ -102,10 +102,13 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void update(){
-        m_testenemy.update();
-        if(m_player.Collision(m_testenemy)){
-            Log.i("collision", "Player Collided");
+        for(int i = 0; i < m_enemies.size(); i++){
+            m_enemies.get(0).update();
+            if(m_player.Collision(m_enemies.get(0))){
+                Log.i("collision", "Player Collided");
+            }
         }
+
     }
 
     private void draw(){
@@ -116,12 +119,12 @@ public class GameView extends SurfaceView implements Runnable {
             m_canvas.drawBitmap(bg,0,0,m_paint);
             m_canvas.drawBitmap(groundTiles,0,m_canvas.getHeight()-groundTiles.getHeight(),m_paint);
             m_canvas.drawBitmap(groundTiles,m_canvas.getWidth()/2,m_canvas.getHeight()-groundTiles.getHeight(),m_paint);
-            m_canvas.drawBitmap(m_testenemy.getSprite(),m_testenemy.getX(),m_testenemy.getY(),m_paint);
-
+            for(int i = 0; i < m_enemies.size(); i++) {
+                m_canvas.drawBitmap(m_enemies.get(0).getSprite(),m_enemies.get(0).getX(),m_enemies.get(0).getY(),m_paint);
+            }
 
             m_canvas.drawBitmap(m_player.getSprite(),m_player.getX(), m_player.getY(),m_paint);
-
-            //TODO: add draw
+            
 
             m_holder.unlockCanvasAndPost(m_canvas);
         }
