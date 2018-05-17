@@ -17,16 +17,31 @@ public class Enemy {
     private int lane2;
     private int lane3;
 
-    private double xV = -0.02;
+    private double xV = -2;
 
     private int playWidth;
 
 
 
-    public Enemy(Context context, int screenW, int screenH,String spritename){
+    public Enemy(Context context, int screenW, int screenH,String spritename,int lanespawn){
         lane1= screenW/4 + 120;
         lane2 = screenW/4 + 240;
         lane3 = screenW/4 + 340;
+
+        switch(lanespawn){
+            case 1:
+                y = lane1;
+                break;
+            case 2:
+                y = lane2;
+                break;
+            case 3:
+                y = lane3;
+                break;
+
+        }
+
+
         name = spritename;
 
         playWidth = screenW;
@@ -37,7 +52,7 @@ public class Enemy {
         sprite = Bitmap.createScaledBitmap(sprite,150,150,false);
 
         x =  screenW-sprite.getWidth();
-        y = lane1;
+
 
         down = true;
 
@@ -46,9 +61,9 @@ public class Enemy {
 
     public void update(){
         x+=xV;
-        if(x == 0){
-            x =  playWidth-sprite.getWidth();
-        }
+//        if(x == 0){
+//            x =  playWidth-sprite.getWidth();
+//        }
        // Log.i("enemy x", ""+ x);
 
     }

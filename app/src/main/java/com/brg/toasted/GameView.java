@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.os.SystemClock;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 
@@ -16,6 +18,7 @@ import android.view.MotionEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -40,6 +43,15 @@ public class GameView extends SurfaceView implements Runnable {
     private Bitmap bg;
     private Bitmap groundTiles;
 
+    int m_screenW;
+    int m_screenH;
+
+    private long base;
+    private int elapsedtime;
+
+    private Typeface toastface;
+
+
 //    private LevelManager m_lm;
 //    private Viewport m_vp;
 //    public InputController m_ic
@@ -48,14 +60,15 @@ public class GameView extends SurfaceView implements Runnable {
         super(context);
 
         m_context = context;
+        m_screenH = screenH;
+        m_screenW = screenW;
         m_holder = getHolder();
         m_paint = new Paint();
-
+        base = SystemClock.elapsedRealtime();
        m_player = new Player(context,screenW,screenH);
-       for(int i = 0; i < 1; i++){
-           m_enemies.add(new Enemy(context,screenW,screenH,"jalapenosprite"));
-       }
+       //m_enemies.add(new Enemy(context,screenW,screenH,"jalapenosprite",1));
 
+        toastface =  Typeface.createFromAsset(m_context.getAssets(),"toasty.ttf");
 
 
         bg = BitmapFactory.decodeResource(context.getResources(), R.drawable.backgroundimage);
@@ -69,13 +82,22 @@ public class GameView extends SurfaceView implements Runnable {
         while(m_playing){
             m_startTime = System.currentTimeMillis();
             update();
+
+            if(((int)(SystemClock.elapsedRealtime() - base)/1000)!=elapsedtime){
+                elapsedtime = (int)(SystemClock.elapsedRealtime() - base)/1000;
+                //Log.i("time", ""+ elapsedtime);
+                enemyspawnSystem();
+            }
             draw();
+
 
             //calc FPS
             m_deltaTime = System.currentTimeMillis() - m_startTime;
             if(m_deltaTime >= 1){
                 m_fps = 1000 / m_deltaTime;
             }
+
+
         }
 
     }
@@ -103,34 +125,52 @@ public class GameView extends SurfaceView implements Runnable {
 
     public void update(){
         for(int i = 0; i < m_enemies.size(); i++){
-            m_enemies.get(0).update();
+            m_enemies.get(i).update();
             if(m_player.Collision(m_enemies.get(0))){
-                Log.i("collision", "Player Collided");
+                //Log.i("collision", "Player Collided");
             }
         }
+
+
 
     }
 
     private void draw(){
         if(m_holder.getSurface().isValid()) {
             m_canvas = m_holder.lockCanvas();
+            m_paint.setTextSize(200);
+            m_paint.setTextAlign(Paint.Align.CENTER);
+            m_paint.setColor(Color.argb(255, 139,69, 19));
+            m_paint.setTypeface(toastface);
 
             m_canvas.drawColor(Color.argb(255,0,0,0));
             m_canvas.drawBitmap(bg,0,0,m_paint);
             m_canvas.drawBitmap(groundTiles,0,m_canvas.getHeight()-groundTiles.getHeight(),m_paint);
             m_canvas.drawBitmap(groundTiles,m_canvas.getWidth()/2,m_canvas.getHeight()-groundTiles.getHeight(),m_paint);
             for(int i = 0; i < m_enemies.size(); i++) {
-                m_canvas.drawBitmap(m_enemies.get(0).getSprite(),m_enemies.get(0).getX(),m_enemies.get(0).getY(),m_paint);
+                m_canvas.drawBitmap(m_enemies.get(i).getSprite(),m_enemies.get(i).getX(),m_enemies.get(i).getY(),m_paint);
             }
 
             m_canvas.drawBitmap(m_player.getSprite(),m_player.getX(), m_player.getY(),m_paint);
-            
 
+            m_canvas.drawText("score: " + elapsedtime, m_screenW/2, 160, m_paint);
             m_holder.unlockCanvasAndPost(m_canvas);
         }
     }
 
     public void enemyspawnSystem(){
+        int randLane = new Random().nextInt(3)+1;
+        int randsprite = new Random().nextInt()+1;
+
+        if(elapsedtime % 5 == 0){
+            Log.i("spawn", "enemy spawned");
+            m_enemies.add(new Enemy(m_context,m_screenW,m_screenH,"jalapenosprite",randLane));
+        }
+        for(int i = 0; i < m_enemies.size(); i++) {
+            if(m_enemies.get(i).getX() == 0){
+                m_enemies.remove(i);
+            }
+        }
 
     }
 
