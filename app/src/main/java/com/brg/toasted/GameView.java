@@ -28,7 +28,8 @@ public class GameView extends SurfaceView implements Runnable {
 
    private Player m_player;
    private List<Enemy> m_enemies = new ArrayList<>();
-
+   private int m_basepeed = -4;
+   private int m_spawnSpeed = 3;
 //    private Enemy m_enemy;
 
     private Paint m_paint;
@@ -68,7 +69,7 @@ public class GameView extends SurfaceView implements Runnable {
        m_player = new Player(context,screenW,screenH);
        //m_enemies.add(new Enemy(context,screenW,screenH,"jalapenosprite",1));
 
-        toastface =  Typeface.createFromAsset(m_context.getAssets(),"toasty.ttf");
+        toastface =  Typeface.createFromAsset(m_context.getAssets(),"toast2.ttf");
 
 
         bg = BitmapFactory.decodeResource(context.getResources(), R.drawable.backgroundimage);
@@ -160,15 +161,29 @@ public class GameView extends SurfaceView implements Runnable {
 
     public void enemyspawnSystem(){
         int randLane = new Random().nextInt(3)+1;
-        int randsprite = new Random().nextInt()+1;
+        int randsprite = new Random().nextInt(5)+1;
 
-        if(elapsedtime % 5 == 0){
-            Log.i("spawn", "enemy spawned");
-            m_enemies.add(new Enemy(m_context,m_screenW,m_screenH,"jalapenosprite",randLane));
+        if(elapsedtime % m_spawnSpeed == 0){
+
+            m_enemies.add(new Enemy(m_context,m_screenW,m_screenH,"jalapenosprite",randLane,m_basepeed));
         }
         for(int i = 0; i < m_enemies.size(); i++) {
             if(m_enemies.get(i).getX() == 0){
                 m_enemies.remove(i);
+            }
+        }
+        if(elapsedtime  == 60) {
+            m_spawnSpeed = 2;
+            m_basepeed = m_basepeed * 2;
+            for(int i = 0; i < m_enemies.size(); i++) {
+               m_enemies.get(i).doubleSpeed();
+            }
+        }
+        if(elapsedtime  == 120) {
+            m_spawnSpeed = 2;
+            m_basepeed = m_basepeed * 2;
+            for(int i = 0; i < m_enemies.size(); i++) {
+                m_enemies.get(i).doubleSpeed();
             }
         }
 

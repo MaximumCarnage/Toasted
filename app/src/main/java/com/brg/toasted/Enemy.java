@@ -17,16 +17,17 @@ public class Enemy {
     private int lane2;
     private int lane3;
 
-    private double xV = -2;
+    private double xV = -4;
 
     private int playWidth;
 
 
 
-    public Enemy(Context context, int screenW, int screenH,String spritename,int lanespawn){
+    public Enemy(Context context, int screenW, int screenH,String spritename,int lanespawn,int basespeed){
         lane1= screenW/4 + 120;
         lane2 = screenW/4 + 240;
         lane3 = screenW/4 + 340;
+        xV = basespeed;
 
         switch(lanespawn){
             case 1:
@@ -68,6 +69,9 @@ public class Enemy {
 
     }
 
+    public void doubleSpeed(){
+        xV = xV*2;
+    };
     public int getX(){
         return x;
     }
