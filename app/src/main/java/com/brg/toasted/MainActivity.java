@@ -13,9 +13,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        GifImageView gifImageView = (GifImageView) findViewById(R.id.GifImageView);
-        gifImageView.setGifImageResource(R.drawable.toastanim);
-
 
         final Button buttonPlay = (Button)findViewById(R.id.buttonPlay);
         buttonPlay.setOnClickListener(this);
