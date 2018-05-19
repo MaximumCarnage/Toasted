@@ -22,7 +22,13 @@
             android:name=".GameActivity"
             android:screenOrientation="landscape" />
         <activity android:name=".LoseActivity"
-                  android:hardwareAccelerated="false" />
+                  android:hardwareAccelerated="false" >
+            <intent-filter>
+                <action android:name="android.intent.action.LOSE"
+                    android:hardwareAccelerated="false"/>
+            </intent-filter>
+        </activity>
+
         <activity android:name=".WinActivity"></activity>
     </application>
 

@@ -1,26 +1,32 @@
 package com.brg.toasted;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.v7.app.AppCompatActivity;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 
 
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
 
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class GameView extends SurfaceView implements Runnable {
+public class GameView extends SurfaceView implements Runnable      {
 
     private boolean m_dBugging = true; // change to false before completion
     private volatile boolean m_playing;
@@ -32,6 +38,7 @@ public class GameView extends SurfaceView implements Runnable {
    private int m_spawnSpeed = 3;
 //    private Enemy m_enemy;
 
+    private LoseActivity m_lAct = null;
     private Paint m_paint;
     private Canvas m_canvas;
     private SurfaceHolder m_holder;
@@ -40,6 +47,7 @@ public class GameView extends SurfaceView implements Runnable {
     private long m_deltaTime;
     private long m_fps;
     private int m_playLane=1;
+    private GameActivity m_ga;
 
     private Bitmap bg;
     private Bitmap groundTiles;
@@ -60,7 +68,10 @@ public class GameView extends SurfaceView implements Runnable {
     public GameView(Context context,int screenW,int screenH){
         super(context);
 
+
+
         m_context = context;
+
         m_screenH = screenH;
         m_screenW = screenW;
         m_holder = getHolder();
@@ -76,6 +87,8 @@ public class GameView extends SurfaceView implements Runnable {
         bg = Bitmap.createScaledBitmap(bg,screenW,screenH,false);
         groundTiles = BitmapFactory.decodeResource(context.getResources(), R.drawable.kitchentiles);
         groundTiles = Bitmap.createScaledBitmap(groundTiles,screenW/2,screenH/3,false);
+
+
     }
 
     @Override
@@ -102,6 +115,8 @@ public class GameView extends SurfaceView implements Runnable {
         }
 
     }
+
+
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent){
 
@@ -112,6 +127,7 @@ public class GameView extends SurfaceView implements Runnable {
 //                break;
             //touch screen
             case MotionEvent.ACTION_DOWN:
+
                 if(m_player.getDown()){
                     m_playLane++;
                 }else{
@@ -127,8 +143,13 @@ public class GameView extends SurfaceView implements Runnable {
     public void update(){
         for(int i = 0; i < m_enemies.size(); i++){
             m_enemies.get(i).update();
-            if(m_player.Collision(m_enemies.get(0))){
+            if(m_player.Collision(m_enemies.get(i))){
+                gameOver();
                 //Log.i("collision", "Player Collided");
+               // m_lAct.setContentView(R.layout.activity_lose);
+              //  m_context.
+
+
             }
         }
 
@@ -201,7 +222,18 @@ public class GameView extends SurfaceView implements Runnable {
         m_playing = true;
         m_gameThread = new Thread(this);
         m_gameThread.start();
+
     }
+    private Activity getActivity(){
+        return(Activity)m_context;
+    }
+    public void gameOver(){
+        Intent i = new Intent(getActivity(), LoseActivity.class);
+        getActivity().startActivity(i);
+        getActivity().finish();
+
+    }
+
 
 
 }
