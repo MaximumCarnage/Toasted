@@ -5,6 +5,7 @@ import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
+import android.widget.Button;
 
 public class GameActivity extends Activity {
     private GameView m_gameView;
@@ -20,7 +21,6 @@ public class GameActivity extends Activity {
         m_gameView = new GameView(this,size.x,size.y);
         setContentView(m_gameView);
 
-
     }
 
     @Override
@@ -34,4 +34,8 @@ public class GameActivity extends Activity {
         super.onResume();
         m_gameView.resume();
     }
+
+
+
+
 }
