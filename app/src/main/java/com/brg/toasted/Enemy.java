@@ -17,7 +17,7 @@ public class Enemy {
     private int lane2;
     private int lane3;
 
-    private double xV = -4;
+    private double xV;
 
     private int playWidth;
 

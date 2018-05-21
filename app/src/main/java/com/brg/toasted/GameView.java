@@ -1,15 +1,19 @@
 package com.brg.toasted;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.SystemClock;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
+
 
 
 import android.util.Log;
@@ -40,6 +44,7 @@ public class GameView extends SurfaceView implements Runnable {
     private long m_deltaTime;
     private long m_fps;
     private int m_playLane=1;
+    private Rect m_pauseButton;
 
     private Bitmap bg;
     private Bitmap groundTiles;
@@ -59,6 +64,12 @@ public class GameView extends SurfaceView implements Runnable {
 
     public GameView(Context context,int screenW,int screenH){
         super(context);
+        int buttonWidth =screenW/8;
+        int buttonHeight =screenH/7;
+        int buttonpadding = screenW/80;
+
+        m_pauseButton = new Rect(buttonpadding,  m_screenH/8,buttonWidth,m_screenH/8+buttonHeight);
+
 
         m_context = context;
         m_screenH = screenH;
@@ -66,7 +77,7 @@ public class GameView extends SurfaceView implements Runnable {
         m_holder = getHolder();
         m_paint = new Paint();
         base = SystemClock.elapsedRealtime();
-       m_player = new Player(context,screenW,screenH);
+         m_player = new Player(context,screenW,screenH);
        //m_enemies.add(new Enemy(context,screenW,screenH,"jalapenosprite",1));
 
         toastface =  Typeface.createFromAsset(m_context.getAssets(),"toast2.ttf");
@@ -127,7 +138,7 @@ public class GameView extends SurfaceView implements Runnable {
     public void update(){
         for(int i = 0; i < m_enemies.size(); i++){
             m_enemies.get(i).update();
-            if(m_player.Collision(m_enemies.get(0))){
+            if(m_player.Collision(m_enemies.get(i))){
                 //Log.i("collision", "Player Collided");
             }
         }
@@ -135,7 +146,6 @@ public class GameView extends SurfaceView implements Runnable {
 
 
     }
-
     private void draw(){
         if(m_holder.getSurface().isValid()) {
             m_canvas = m_holder.lockCanvas();
@@ -144,17 +154,19 @@ public class GameView extends SurfaceView implements Runnable {
             m_paint.setColor(Color.argb(255, 139,69, 19));
             m_paint.setTypeface(toastface);
 
+
             m_canvas.drawColor(Color.argb(255,0,0,0));
             m_canvas.drawBitmap(bg,0,0,m_paint);
             m_canvas.drawBitmap(groundTiles,0,m_canvas.getHeight()-groundTiles.getHeight(),m_paint);
             m_canvas.drawBitmap(groundTiles,m_canvas.getWidth()/2,m_canvas.getHeight()-groundTiles.getHeight(),m_paint);
+            m_canvas.drawRect(m_pauseButton,m_paint);
             for(int i = 0; i < m_enemies.size(); i++) {
                 m_canvas.drawBitmap(m_enemies.get(i).getSprite(),m_enemies.get(i).getX(),m_enemies.get(i).getY(),m_paint);
             }
 
             m_canvas.drawBitmap(m_player.getSprite(),m_player.getX(), m_player.getY(),m_paint);
 
-            m_canvas.drawText("score: " + elapsedtime, m_screenW/2, 160, m_paint);
+            m_canvas.drawText("score: " + elapsedtime, m_screenW/2, m_screenH/8, m_paint);
             m_holder.unlockCanvasAndPost(m_canvas);
         }
     }
@@ -164,7 +176,6 @@ public class GameView extends SurfaceView implements Runnable {
         int randsprite = new Random().nextInt(5)+1;
 
         if(elapsedtime % m_spawnSpeed == 0){
-
             m_enemies.add(new Enemy(m_context,m_screenW,m_screenH,"jalapenosprite",randLane,m_basepeed));
         }
         for(int i = 0; i < m_enemies.size(); i++) {
@@ -172,15 +183,15 @@ public class GameView extends SurfaceView implements Runnable {
                 m_enemies.remove(i);
             }
         }
-        if(elapsedtime  == 60) {
+        if(elapsedtime  == 30) {
             m_spawnSpeed = 2;
             m_basepeed = m_basepeed * 2;
             for(int i = 0; i < m_enemies.size(); i++) {
                m_enemies.get(i).doubleSpeed();
             }
         }
-        if(elapsedtime  == 120) {
-            m_spawnSpeed = 2;
+        if(elapsedtime  == 60) {
+            m_spawnSpeed = 1;
             m_basepeed = m_basepeed * 2;
             for(int i = 0; i < m_enemies.size(); i++) {
                 m_enemies.get(i).doubleSpeed();
