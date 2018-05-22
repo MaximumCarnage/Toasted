@@ -134,11 +134,17 @@ public class GameView extends SurfaceView implements Runnable {
 
         return true;
     }
+    public Activity getActivity(){
+        return (Activity)m_context;
+    }
 
     public void update(){
         for(int i = 0; i < m_enemies.size(); i++){
             m_enemies.get(i).update();
             if(m_player.Collision(m_enemies.get(i))){
+                Intent intent = new Intent(getActivity(), LoseActivity.class);
+                getActivity().startActivity(intent);
+                getActivity().finish();
                 //Log.i("collision", "Player Collided");
             }
         }
