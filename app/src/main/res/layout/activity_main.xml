@@ -87,4 +87,15 @@
         android:layout_marginTop="92dp"
         app:srcCompat="@drawable/menutoaster" />
 
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="58dp"
+        android:layout_marginStart="59dp"
+        android:onClick="clickexit"
+        android:text="Button" />
+
 </RelativeLayout>
