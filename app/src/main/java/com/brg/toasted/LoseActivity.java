@@ -5,9 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class LoseActivity extends AppCompatActivity implements View.OnClickListener{
 
+    private int score;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -15,6 +17,9 @@ public class LoseActivity extends AppCompatActivity implements View.OnClickListe
 
 
         final Button buttonMenu = (Button)findViewById(R.id.menu);
+        final TextView scoreBox = (TextView)findViewById(R.id.finalscore);
+
+        scoreBox.setText("FinalScore= "+score);
         buttonMenu.setOnClickListener(this);
 
     }
@@ -32,6 +37,10 @@ public class LoseActivity extends AppCompatActivity implements View.OnClickListe
         finish();
 
 
+    }
+
+    public void setFinalScore(int gameScore){
+        score = gameScore;
     }
 }
 

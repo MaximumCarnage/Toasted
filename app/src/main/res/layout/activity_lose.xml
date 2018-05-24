@@ -53,20 +53,26 @@
         android:id="@+id/imageView"
         android:layout_width="452dp"
         android:layout_height="248dp"
-        app:srcCompat="@drawable/menutoastdie"
-        tools:layout_editor_absoluteX="70dp"
-        tools:layout_editor_absoluteY="31dp" />
+        android:layout_marginBottom="46dp"
+        android:layout_marginTop="31dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.997"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/menutoastdie" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="461dp"
         android:layout_height="84dp"
-        android:fontFamily="@font/TexasToast"
+        android:fontFamily="@font/texastoast"
         android:text="You've just been Toasted!"
         android:textAlignment="center"
         android:textSize="36sp"
-        tools:layout_editor_absoluteX="77dp"
-        tools:layout_editor_absoluteY="28dp" />
+        tools:layout_editor_absoluteX="66dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -75,6 +81,23 @@
         app:srcCompat="@drawable/firedie"
         tools:layout_editor_absoluteX="-566dp"
         tools:layout_editor_absoluteY="125dp" />
+
+    <TextView
+        android:id="@+id/finalscore"
+        android:layout_width="425dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="74dp"
+        android:text="Final Score:"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <!--<ImageView-->
         <!--android:id="@+id/imageView4"-->

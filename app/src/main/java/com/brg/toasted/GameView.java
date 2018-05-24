@@ -49,6 +49,9 @@ public class GameView extends SurfaceView implements Runnable {
 
     private Bitmap bg;
     private Bitmap groundTiles;
+    private Bitmap pausedButt,resumeButt;
+
+    private PauseButton m_pauseSprites;
 
     int m_screenW;
     int m_screenH;
@@ -82,6 +85,11 @@ public class GameView extends SurfaceView implements Runnable {
        //m_enemies.add(new Enemy(context,screenW,screenH,"jalapenosprite",1));
 
         toastface =  Typeface.createFromAsset(m_context.getAssets(), "texastoast.ttf");
+
+        pausedButt = BitmapFactory.decodeResource(context.getResources(), R.drawable.pausebutt);
+        pausedButt = Bitmap.createScaledBitmap(pausedButt,m_pauseButton.width(),m_pauseButton.height(),false);
+        resumeButt = BitmapFactory.decodeResource(context.getResources(), R.drawable.playbutt);
+        resumeButt = Bitmap.createScaledBitmap(resumeButt,m_pauseButton.width(),m_pauseButton.height(),false);
 
 
         bg = BitmapFactory.decodeResource(context.getResources(), R.drawable.backgroundimage);
@@ -155,9 +163,12 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void update(){
+
+
         for(int i = 0; i < m_enemies.size(); i++){
             m_enemies.get(i).update();
             if(m_player.Collision(m_enemies.get(i))){
+
                 Intent intent = new Intent(getActivity(), LoseActivity.class);
                 getActivity().startActivity(intent);
                 getActivity().finish();
@@ -185,6 +196,12 @@ public class GameView extends SurfaceView implements Runnable {
             m_canvas.drawRect(m_pauseButton,m_paint);
             for(int i = 0; i < m_enemies.size(); i++) {
                 m_canvas.drawBitmap(m_enemies.get(i).getSprite(),m_enemies.get(i).getX(),m_enemies.get(i).getY(),m_paint);
+            }
+
+            if(!m_paused){
+                m_canvas.drawBitmap(pausedButt,m_pauseButton.top,m_pauseButton.left,m_paint);
+            }else{
+                m_canvas.drawBitmap(resumeButt,m_pauseButton.top,m_pauseButton.left,m_paint);
             }
 
             m_canvas.drawBitmap(m_player.getSprite(),m_player.getX(), m_player.getY(),m_paint);
