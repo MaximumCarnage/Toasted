@@ -34,9 +34,11 @@
         android:layout_alignStart="@+id/imageView9"
         android:layout_marginStart="-39dp"
         android:layout_marginTop="17dp"
-        android:fontFamily="@font/toast2"
+        android:fontFamily="@font/texastoast"
         android:text="Get Toasted"
-        android:textSize="30sp"
+        android:textAlignment="center"
+        android:textSize="36sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/buttonPlay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.588"
@@ -75,9 +77,10 @@
         android:layout_marginStart="192dp"
         android:alpha="2"
         android:elevation="12dp"
-        android:fontFamily="@font/toast2"
+        android:fontFamily="@font/texastoast"
         android:text="Play"
         android:textColor="#000000"
+        android:textSize="30sp"
         android:visibility="visible"
         app:layout_constraintTop_toBottomOf="@+id/imageView7" />
 
@@ -101,10 +104,11 @@
         android:layout_marginEnd="181dp"
         android:alpha="2"
         android:elevation="12dp"
-        android:fontFamily="@font/toast2"
+        android:fontFamily="@font/texastoast"
         android:onClick="clickexit"
         android:text="quit"
         android:textColor="#000000"
+        android:textSize="30sp"
         android:visibility="visible"
         app:layout_constraintTop_toBottomOf="@+id/imageView7" />
 

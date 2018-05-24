@@ -59,11 +59,14 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="234dp"
-        android:layout_height="96dp"
-        android:text="youve just been toatsed"
-        tools:layout_editor_absoluteX="194dp"
-        tools:layout_editor_absoluteY="16dp" />
+        android:layout_width="461dp"
+        android:layout_height="84dp"
+        android:fontFamily="@font/TexasToast"
+        android:text="You've just been Toasted!"
+        android:textAlignment="center"
+        android:textSize="36sp"
+        tools:layout_editor_absoluteX="77dp"
+        tools:layout_editor_absoluteY="28dp" />
 
     <ImageView
         android:id="@+id/imageView2"

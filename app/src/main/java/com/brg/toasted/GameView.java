@@ -81,7 +81,7 @@ public class GameView extends SurfaceView implements Runnable {
          m_player = new Player(context,screenW,screenH);
        //m_enemies.add(new Enemy(context,screenW,screenH,"jalapenosprite",1));
 
-        toastface =  Typeface.createFromAsset(m_context.getAssets(),"toast2.ttf");
+        toastface =  Typeface.createFromAsset(m_context.getAssets(), "texastoast.ttf");
 
 
         bg = BitmapFactory.decodeResource(context.getResources(), R.drawable.backgroundimage);
