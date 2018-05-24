@@ -26,7 +26,8 @@
                   android:hardwareAccelerated="false" >
             <intent-filter>
                 <action android:name="android.intent.action.LOSE"
-                    android:hardwareAccelerated="false"/>
+                    android:hardwareAccelerated="false"
+                    android:screenOrientation="landscape"/>
             </intent-filter>
         </activity>
 
