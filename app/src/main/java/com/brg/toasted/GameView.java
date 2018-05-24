@@ -28,6 +28,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private boolean m_dBugging = true; // change to false before completion
     private volatile boolean m_playing;
+    private boolean m_paused=false;
     private Thread m_gameThread = null;
 
    private Player m_player;
@@ -115,6 +116,8 @@ public class GameView extends SurfaceView implements Runnable {
     }
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent){
+        int x = (int) motionEvent.getX();
+        int y = (int) motionEvent.getY();
 
         switch(motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             //lift finger
@@ -123,7 +126,20 @@ public class GameView extends SurfaceView implements Runnable {
 //                break;
             //touch screen
             case MotionEvent.ACTION_DOWN:
-                if(m_player.getDown()){
+                if(x >= m_pauseButton.left && x <= m_pauseButton.right
+                        && y >= m_pauseButton.top && y <= m_pauseButton.bottom)
+                {
+                    if(!m_paused){
+                        pause();
+                        m_paused = true;
+                    }else{
+                        resume();
+                        m_paused = false;
+                    }
+
+                    Log.i("Paused", "GamePaused");
+                }
+                else if(m_player.getDown()){
                     m_playLane++;
                 }else{
                     m_playLane--;
@@ -165,6 +181,7 @@ public class GameView extends SurfaceView implements Runnable {
             m_canvas.drawBitmap(bg,0,0,m_paint);
             m_canvas.drawBitmap(groundTiles,0,m_canvas.getHeight()-groundTiles.getHeight(),m_paint);
             m_canvas.drawBitmap(groundTiles,m_canvas.getWidth()/2,m_canvas.getHeight()-groundTiles.getHeight(),m_paint);
+           //pause btn
             m_canvas.drawRect(m_pauseButton,m_paint);
             for(int i = 0; i < m_enemies.size(); i++) {
                 m_canvas.drawBitmap(m_enemies.get(i).getSprite(),m_enemies.get(i).getX(),m_enemies.get(i).getY(),m_paint);
@@ -208,6 +225,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     public void pause(){
         m_playing = false;
+
         try {
             m_gameThread.join();
         } catch(InterruptedException e){
@@ -216,6 +234,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
     public void resume(){
         m_playing = true;
+        elapsedtime = (int)SystemClock.elapsedRealtime()-elapsedtime;
         m_gameThread = new Thread(this);
         m_gameThread.start();
     }
