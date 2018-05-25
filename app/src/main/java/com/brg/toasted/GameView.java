@@ -33,8 +33,8 @@ public class GameView extends SurfaceView implements Runnable {
 
    private Player m_player;
    private List<Enemy> m_enemies = new ArrayList<>();
-   private int m_basepeed = -4;
-   private int m_spawnSpeed = 3;
+   private int m_basepeed = -8;
+   private float m_spawnSpeed = 3;
 //    private Enemy m_enemy;
 
     private Paint m_paint;
@@ -225,7 +225,7 @@ public class GameView extends SurfaceView implements Runnable {
         }
         if(elapsedtime  == 30) {
             m_spawnSpeed = 2;
-            m_basepeed = m_basepeed * 2;
+            m_basepeed = m_basepeed *4;
             for(int i = 0; i < m_enemies.size(); i++) {
                m_enemies.get(i).doubleSpeed();
             }
