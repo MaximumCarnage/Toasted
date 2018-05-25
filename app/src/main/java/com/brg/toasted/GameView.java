@@ -73,7 +73,7 @@ public class GameView extends SurfaceView implements Runnable {
         int buttonpadding = screenW/80;
 
         m_pauseButton = new Rect(buttonpadding,  m_screenH/8,buttonWidth,m_screenH/8+buttonHeight);
-
+        m_pauseSprites = new PauseButton(m_pauseButton.top,m_pauseButton.left,pausedButt);
 
         m_context = context;
         m_screenH = screenH;
@@ -198,11 +198,7 @@ public class GameView extends SurfaceView implements Runnable {
                 m_canvas.drawBitmap(m_enemies.get(i).getSprite(),m_enemies.get(i).getX(),m_enemies.get(i).getY(),m_paint);
             }
 
-            if(!m_paused){
-                m_canvas.drawBitmap(pausedButt,m_pauseButton.top,m_pauseButton.left,m_paint);
-            }else{
-                m_canvas.drawBitmap(resumeButt,m_pauseButton.top,m_pauseButton.left,m_paint);
-            }
+
 
             m_canvas.drawBitmap(m_player.getSprite(),m_player.getX(), m_player.getY(),m_paint);
 
