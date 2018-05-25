@@ -26,6 +26,8 @@ import java.util.Random;
 
 public class GameView extends SurfaceView implements Runnable {
 
+    public static int SCORE;
+
     private boolean m_dBugging = true; // change to false before completion
     private volatile boolean m_playing;
     private boolean m_paused=false;
@@ -35,7 +37,6 @@ public class GameView extends SurfaceView implements Runnable {
    private List<Enemy> m_enemies = new ArrayList<>();
    private int m_basepeed = -4;
    private int m_spawnSpeed = 3;
-//    private Enemy m_enemy;
 
     private Paint m_paint;
     private Canvas m_canvas;
@@ -58,6 +59,8 @@ public class GameView extends SurfaceView implements Runnable {
 
     private long base;
     private int elapsedtime;
+    private int timePaused;
+    private int onPause;
 
     private Typeface toastface;
 
@@ -71,7 +74,6 @@ public class GameView extends SurfaceView implements Runnable {
         int buttonWidth =screenW/8;
         int buttonHeight =screenH/7;
         int buttonpadding = screenW/80;
-
         m_pauseButton = new Rect(buttonpadding,  m_screenH/8,buttonWidth,m_screenH/8+buttonHeight);
         m_pauseSprites = new PauseButton(m_pauseButton.top,m_pauseButton.left,pausedButt);
 
@@ -104,8 +106,8 @@ public class GameView extends SurfaceView implements Runnable {
             m_startTime = System.currentTimeMillis();
             update();
 
-            if(((int)(SystemClock.elapsedRealtime() - base)/1000)!=elapsedtime){
-                elapsedtime = (int)(SystemClock.elapsedRealtime() - base)/1000;
+            if(((int)(SystemClock.elapsedRealtime() - base)/1000)-timePaused!=elapsedtime){
+                elapsedtime = (int)((SystemClock.elapsedRealtime() - base)/1000)-timePaused;
                 //Log.i("time", ""+ elapsedtime);
                 enemyspawnSystem();
             }
@@ -145,7 +147,6 @@ public class GameView extends SurfaceView implements Runnable {
                         m_paused = false;
                     }
 
-                    Log.i("Paused", "GamePaused");
                 }
                 else if(m_player.getDown()){
                     m_playLane++;
@@ -169,10 +170,11 @@ public class GameView extends SurfaceView implements Runnable {
             m_enemies.get(i).update();
             if(m_player.Collision(m_enemies.get(i))){
 
+                SCORE = elapsedtime;
                 Intent intent = new Intent(getActivity(), LoseActivity.class);
                 getActivity().startActivity(intent);
                 getActivity().finish();
-                //Log.i("collision", "Player Collided");
+
             }
         }
 
@@ -238,7 +240,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     public void pause(){
         m_playing = false;
-
+        onPause = elapsedtime;
         try {
             m_gameThread.join();
         } catch(InterruptedException e){
@@ -247,7 +249,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
     public void resume(){
         m_playing = true;
-        elapsedtime = (int)SystemClock.elapsedRealtime()-elapsedtime;
+        timePaused = (int)((SystemClock.elapsedRealtime()-base)/1000)-onPause;
         m_gameThread = new Thread(this);
         m_gameThread.start();
     }

@@ -7,15 +7,15 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-
+    private SoundManager m_sm = new SoundManager();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         final Button buttonPlay = (Button)findViewById(R.id.buttonPlay);
         buttonPlay.setOnClickListener(this);
+        m_sm.playSound("MenuMusic");
     }
 
 

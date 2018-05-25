@@ -3,19 +3,18 @@ package com.brg.toasted;
 import android.app.Activity;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
-import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
 import java.io.IOException;
 
 public class SoundManager extends Activity {
 
     private SoundPool soundPool;
+    int sample1 = -1;
     int EnemyHit = -1;
     int EnemyWalk1 = -1;
     int EnemyWalk2 = -1;
@@ -32,21 +31,15 @@ public class SoundManager extends Activity {
     int ToasterSlide = -1;
     int Unpause = -1;
     private View view;
+public SoundManager(){
 
+}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .setUsage(AudioAttributes.USAGE_GAME)
-                .build();
-
-        soundPool = new SoundPool.Builder()
-                .setMaxStreams(2)
-                .setAudioAttributes(audioAttributes)
-                .build();
+        soundPool = new SoundPool(20, AudioManager.STREAM_MUSIC,0);
 
 
         // soundPool = new SoundPool.Builder(); //new SoundPool(10, AudioManager.STREAM_MUSIC,0);
@@ -54,6 +47,9 @@ public class SoundManager extends Activity {
             // Create objects of the 2 required classes
             AssetManager assetManager = getAssets();
             AssetFileDescriptor descriptor;
+
+            descriptor = assetManager.openFd("sample1.ogg");
+            sample1 = soundPool.load(descriptor, 0);
 
             //create our three fx in memory ready for use
             descriptor = assetManager.openFd("EnemyHit.ogg");
@@ -77,7 +73,7 @@ public class SoundManager extends Activity {
             descriptor = assetManager.openFd("Loss2.ogg");
             Loss2 = soundPool.load(descriptor, 0);
 
-            descriptor = assetManager.openFd("MenuMusic.ogg");
+            descriptor = assetManager.openFd("menumusic.ogg");
             MenuMusic = soundPool.load(descriptor, 0);
 
             descriptor = assetManager.openFd("PancakeBounce.ogg");
@@ -136,7 +132,8 @@ public class SoundManager extends Activity {
                 break;
 
             case "MenuMusic":
-                soundPool.play(MenuMusic, 1, 1, 0, 1, 1);
+                //soundPool.play(MenuMusic, 1, 1, 0, 1, 1);
+                Log.i("Test:","MenuMusicTime");
                 break;
 
             case "PancakeBounce":

@@ -24,9 +24,9 @@ public class Enemy {
 
 
     public Enemy(Context context, int screenW, int screenH,String spritename,int lanespawn,int basespeed){
-        lane1= screenW/4 + 120;
-        lane2 = screenW/4 + 240;
-        lane3 = screenW/4 + 340;
+        lane1= screenW/4 + 130;
+        lane2 = screenW/4 + 250;
+        lane3 = screenW/4 + 350;
         xV = basespeed;
 
         switch(lanespawn){

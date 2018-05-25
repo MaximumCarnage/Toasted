@@ -14,21 +14,23 @@ public class Player {
     private int lane2;
     private int lane3;
 
-
+    private Animation m_anim = null;
 
 
     public Player(Context context, int screenW, int screenH){
-        lane1 = screenW/4 + 120;
-        lane2 = screenW/4 + 240;
-        lane3 = screenW/4 + 340;
+        lane1 = screenW/4 + 130;
+        lane2 = screenW/4 + 250;
+        lane3 = screenW/4 + 350;
 
+        final int ANIMATION_FPS = 16;
 
+        m_anim = new Animation(context,sprite,238,256, ANIMATION_FPS,14, 12);
 
         x = screenH/4;
         y = lane1;
 
         sprite = BitmapFactory.decodeResource(context.getResources(), R.drawable.toastplayer);
-        sprite = Bitmap.createScaledBitmap(sprite,150,150,false);
+        sprite = Bitmap.createScaledBitmap(sprite,screenW/10,screenH/8,false);
 
         down = true;
 
@@ -84,5 +86,9 @@ public class Player {
         }
         return collision;
 
+    }
+
+    public Rect getRectToDraw(long deltaTime) {
+        return m_anim.getCurrentFrame(deltaTime);
     }
 }

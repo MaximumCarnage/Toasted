@@ -14,7 +14,7 @@ public class LoseActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lose);
-
+        score = GameView.SCORE;
 
         final Button buttonMenu = (Button)findViewById(R.id.menu);
         final TextView scoreBox = (TextView)findViewById(R.id.finalscore);
