@@ -10,7 +10,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 
@@ -20,6 +22,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -63,6 +66,8 @@ public class GameView extends SurfaceView implements Runnable {
     private int onPause;
 
     private Typeface toastface;
+     MediaPlayer musicplayer,soundplayer;
+
 
 
 //    private LevelManager m_lm;
@@ -70,7 +75,11 @@ public class GameView extends SurfaceView implements Runnable {
 //    public InputController m_ic
 
     public GameView(Context context,int screenW,int screenH){
+
+
         super(context);
+        soundplayer = MediaPlayer.create(context,R.raw.pause);
+        musicplayer = MediaPlayer.create(context,R.raw.gameplaymusic);
         int buttonWidth =screenW/8;
         int buttonHeight =screenH/7;
         int buttonpadding = screenW/80;
@@ -102,6 +111,8 @@ public class GameView extends SurfaceView implements Runnable {
 
     @Override
     public void run(){
+        musicplayer.start();
+
         while(m_playing){
             m_startTime = System.currentTimeMillis();
             update();
@@ -149,8 +160,12 @@ public class GameView extends SurfaceView implements Runnable {
 
                 }
                 else if(m_player.getDown()){
+                    soundplayer = MediaPlayer.create(m_context,R.raw.step1);
+                    soundplayer.start();
                     m_playLane++;
                 }else{
+                    soundplayer = MediaPlayer.create(m_context,R.raw.step2);
+                    soundplayer.start();
                     m_playLane--;
                 }
                 m_player.setLane(m_playLane);
@@ -169,8 +184,12 @@ public class GameView extends SurfaceView implements Runnable {
         for(int i = 0; i < m_enemies.size(); i++){
             m_enemies.get(i).update();
             if(m_player.Collision(m_enemies.get(i))){
-
+                soundplayer = MediaPlayer.create(m_context,R.raw.enemyhit);
+                soundplayer.start();
                 SCORE = elapsedtime;
+                musicplayer.stop();
+                soundplayer = MediaPlayer.create(m_context,R.raw.loss);
+                soundplayer.start();
                 Intent intent = new Intent(getActivity(), LoseActivity.class);
                 getActivity().startActivity(intent);
                 getActivity().finish();
@@ -240,6 +259,10 @@ public class GameView extends SurfaceView implements Runnable {
 
     public void pause(){
         m_playing = false;
+        soundplayer = MediaPlayer.create(m_context,R.raw.pause);
+        soundplayer.start();
+        soundplayer.release();
+        musicplayer.release();
         onPause = elapsedtime;
         try {
             m_gameThread.join();
@@ -247,12 +270,16 @@ public class GameView extends SurfaceView implements Runnable {
             Log.d("error in GameView.Java - Pause", e.getMessage());
         }
     }
-    public void resume(){
+    public void resume() {
         m_playing = true;
-        timePaused = (int)((SystemClock.elapsedRealtime()-base)/1000)-onPause;
-        m_gameThread = new Thread(this);
-        m_gameThread.start();
+            soundplayer = MediaPlayer.create(m_context,R.raw.unpause);
+            soundplayer.start();
+            soundplayer.release();
+            musicplayer.release();
+            timePaused = (int) ((SystemClock.elapsedRealtime() - base) / 1000) - onPause;
+            m_gameThread = new Thread(this);
+            m_gameThread.start();
+        }
+
     }
 
-
-}

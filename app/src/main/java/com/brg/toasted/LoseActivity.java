@@ -1,6 +1,7 @@
 package com.brg.toasted;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,7 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class LoseActivity extends AppCompatActivity implements View.OnClickListener{
-
+    MediaPlayer soundplayer;
     private int score;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,11 @@ public class LoseActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
+        soundplayer = MediaPlayer.create(this,R.raw.toasterslide);
+        soundplayer.start();
+        soundplayer.stop();
+        soundplayer.release();
+
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         finish();
