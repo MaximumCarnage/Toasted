@@ -50,7 +50,7 @@ public class Enemy {
 
 
         sprite = BitmapFactory.decodeResource(context.getResources(), resID);
-        sprite = Bitmap.createScaledBitmap(sprite,150,150,false);
+        sprite = Bitmap.createScaledBitmap(sprite,screenW/10,screenH/8,false);
 
         x =  screenW-sprite.getWidth();
 

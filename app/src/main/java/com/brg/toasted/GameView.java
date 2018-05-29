@@ -3,6 +3,7 @@ package com.brg.toasted;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -27,9 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class GameView extends SurfaceView implements Runnable {
+public class GameView extends SurfaceView implements Runnable,MediaPlayer.OnPreparedListener {
 
     public static int SCORE;
+
+    int[] sounds;
 
     private boolean m_dBugging = true; // change to false before completion
     private volatile boolean m_playing;
@@ -39,7 +42,7 @@ public class GameView extends SurfaceView implements Runnable {
    private Player m_player;
    private List<Enemy> m_enemies = new ArrayList<>();
    private int m_basepeed = -4;
-   private int m_spawnSpeed = 3;
+   private float m_spawnSpeed = 3;
 
     private Paint m_paint;
     private Canvas m_canvas;
@@ -55,8 +58,6 @@ public class GameView extends SurfaceView implements Runnable {
     private Bitmap groundTiles;
     private Bitmap pausedButt,resumeButt;
 
-    private PauseButton m_pauseSprites;
-
     int m_screenW;
     int m_screenH;
 
@@ -66,25 +67,22 @@ public class GameView extends SurfaceView implements Runnable {
     private int onPause;
 
     private Typeface toastface;
-     MediaPlayer musicplayer,soundplayer;
 
 
+    private MediaPlayer soundplayer,musicplayer;
+    AssetFileDescriptor afd;
 
-//    private LevelManager m_lm;
-//    private Viewport m_vp;
-//    public InputController m_ic
+
 
     public GameView(Context context,int screenW,int screenH){
 
 
         super(context);
-        soundplayer = MediaPlayer.create(context,R.raw.pause);
-        musicplayer = MediaPlayer.create(context,R.raw.gameplaymusic);
+        sounds= new int[] {R.raw.enemyhit,R.raw.step1,R.raw.step2,R.raw.loss,R.raw.pause,R.raw.unpause};
         int buttonWidth =screenW/8;
         int buttonHeight =screenH/7;
         int buttonpadding = screenW/80;
         m_pauseButton = new Rect(buttonpadding,  m_screenH/8,buttonWidth,m_screenH/8+buttonHeight);
-        m_pauseSprites = new PauseButton(m_pauseButton.top,m_pauseButton.left,pausedButt);
 
         m_context = context;
         m_screenH = screenH;
@@ -107,19 +105,24 @@ public class GameView extends SurfaceView implements Runnable {
         bg = Bitmap.createScaledBitmap(bg,screenW,screenH,false);
         groundTiles = BitmapFactory.decodeResource(context.getResources(), R.drawable.kitchentiles);
         groundTiles = Bitmap.createScaledBitmap(groundTiles,screenW/2,screenH/3,false);
+
+        musicplayer = MediaPlayer.create(context,R.raw.gameplaymusic);
+        soundplayer = new MediaPlayer();
     }
+
+
 
     @Override
     public void run(){
-        musicplayer.start();
-
+        if(!musicplayer.isPlaying()){
+            musicplayer.start();
+        }
         while(m_playing){
             m_startTime = System.currentTimeMillis();
             update();
 
             if(((int)(SystemClock.elapsedRealtime() - base)/1000)-timePaused!=elapsedtime){
                 elapsedtime = (int)((SystemClock.elapsedRealtime() - base)/1000)-timePaused;
-                //Log.i("time", ""+ elapsedtime);
                 enemyspawnSystem();
             }
             draw();
@@ -151,21 +154,29 @@ public class GameView extends SurfaceView implements Runnable {
                         && y >= m_pauseButton.top && y <= m_pauseButton.bottom)
                 {
                     if(!m_paused){
+                        playsound(4);
                         pause();
                         m_paused = true;
                     }else{
+                        playsound(5);
                         resume();
                         m_paused = false;
                     }
 
                 }
                 else if(m_player.getDown()){
-                    soundplayer = MediaPlayer.create(m_context,R.raw.step1);
-                    soundplayer.start();
+                    playsound(1);
+//                    if(!soundplayer.isPlaying()){
+//                        soundplayer = MediaPlayer.create(m_context,R.raw.step1);
+//                        soundplayer.start();
+//                    }
                     m_playLane++;
                 }else{
-                    soundplayer = MediaPlayer.create(m_context,R.raw.step2);
-                    soundplayer.start();
+                    playsound(2);
+//                    if(!soundplayer.isPlaying()){
+//                        soundplayer = MediaPlayer.create(m_context,R.raw.step2);
+//                        soundplayer.start();
+//                    }
                     m_playLane--;
                 }
                 m_player.setLane(m_playLane);
@@ -184,12 +195,9 @@ public class GameView extends SurfaceView implements Runnable {
         for(int i = 0; i < m_enemies.size(); i++){
             m_enemies.get(i).update();
             if(m_player.Collision(m_enemies.get(i))){
-                soundplayer = MediaPlayer.create(m_context,R.raw.enemyhit);
-                soundplayer.start();
                 SCORE = elapsedtime;
-                musicplayer.stop();
-                soundplayer = MediaPlayer.create(m_context,R.raw.loss);
-                soundplayer.start();
+                playsound(0);
+                playsound(3);
                 Intent intent = new Intent(getActivity(), LoseActivity.class);
                 getActivity().startActivity(intent);
                 getActivity().finish();
@@ -213,8 +221,7 @@ public class GameView extends SurfaceView implements Runnable {
             m_canvas.drawBitmap(bg,0,0,m_paint);
             m_canvas.drawBitmap(groundTiles,0,m_canvas.getHeight()-groundTiles.getHeight(),m_paint);
             m_canvas.drawBitmap(groundTiles,m_canvas.getWidth()/2,m_canvas.getHeight()-groundTiles.getHeight(),m_paint);
-           //pause btn
-            m_canvas.drawRect(m_pauseButton,m_paint);
+            m_canvas.drawBitmap(pausedButt,m_pauseButton.left,m_pauseButton.top,m_paint);
             for(int i = 0; i < m_enemies.size(); i++) {
                 m_canvas.drawBitmap(m_enemies.get(i).getSprite(),m_enemies.get(i).getX(),m_enemies.get(i).getY(),m_paint);
             }
@@ -227,13 +234,59 @@ public class GameView extends SurfaceView implements Runnable {
             m_holder.unlockCanvasAndPost(m_canvas);
         }
     }
+    public void onPrepared(MediaPlayer player) {
+        player.start();
+    }
+    public void pauseMusic(){
+        if(musicplayer.isPlaying()){
+            musicplayer.pause();
+        }
+    }
+
+    public void resumeMusic(){
+        if(!musicplayer.isPlaying()){
+            musicplayer.start();
+        }
+    }
+    public void playsound(int index){
+
+        afd = this.getResources().openRawResourceFd(sounds[index]);
+        try
+        {
+            soundplayer.reset();
+            soundplayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getDeclaredLength());
+            soundplayer.prepare();
+            soundplayer.start();
+            afd.close();
+        }catch(IOException e){
+
+        }
+    }
 
     public void enemyspawnSystem(){
         int randLane = new Random().nextInt(3)+1;
-        int randsprite = new Random().nextInt(5)+1;
+
 
         if(elapsedtime % m_spawnSpeed == 0){
-            m_enemies.add(new Enemy(m_context,m_screenW,m_screenH,"jalapenosprite",randLane,m_basepeed));
+            int randsprite = new Random().nextInt(5)+1;
+            switch(randsprite){
+                case 1:
+                    m_enemies.add(new Enemy(m_context,m_screenW,m_screenH,"jalapenosprite",randLane,m_basepeed));
+                    break;
+                case 2:
+                    m_enemies.add(new Enemy(m_context,m_screenW,m_screenH,"baconsprite",randLane,m_basepeed));
+                    break;
+                case 3:
+                    m_enemies.add(new Enemy(m_context,m_screenW,m_screenH,"burritosprite",randLane,m_basepeed));
+                    break;
+                case 4:
+                    m_enemies.add(new Enemy(m_context,m_screenW,m_screenH,"pancakesprite",randLane,m_basepeed));
+                    break;
+                case 5:
+                    m_enemies.add(new Enemy(m_context,m_screenW,m_screenH,"pizzasprite",randLane,m_basepeed));
+                    break;
+            }
+
         }
         for(int i = 0; i < m_enemies.size(); i++) {
             if(m_enemies.get(i).getX() == 0){
@@ -254,15 +307,52 @@ public class GameView extends SurfaceView implements Runnable {
                 m_enemies.get(i).doubleSpeed();
             }
         }
+        if(elapsedtime  == 80) {
+            m_basepeed = m_basepeed * 2;
+            for(int i = 0; i < m_enemies.size(); i++) {
+                m_enemies.get(i).doubleSpeed();
+            }
+        }
+
+        if(elapsedtime  == 100) {
+            m_basepeed = m_basepeed * 2;
+            for(int i = 0; i < m_enemies.size(); i++) {
+                m_enemies.get(i).doubleSpeed();
+            }
+        }
+
+        if(elapsedtime  == 110) {
+            m_basepeed = m_basepeed * 2;
+            for(int i = 0; i < m_enemies.size(); i++) {
+                m_enemies.get(i).doubleSpeed();
+            }
+        }
+
+        if(elapsedtime  == 120) {
+            m_basepeed = m_basepeed * 2;
+            for(int i = 0; i < m_enemies.size(); i++) {
+                m_enemies.get(i).doubleSpeed();
+            }
+        }
+
+        if(elapsedtime  == 130) {
+            m_basepeed = m_basepeed * 2;
+            for(int i = 0; i < m_enemies.size(); i++) {
+                m_enemies.get(i).doubleSpeed();
+            }
+        }
+        if(elapsedtime  == 140) {
+            m_basepeed = m_basepeed * 2;
+            for(int i = 0; i < m_enemies.size(); i++) {
+                m_enemies.get(i).doubleSpeed();
+            }
+        }
 
     }
 
     public void pause(){
         m_playing = false;
-        soundplayer = MediaPlayer.create(m_context,R.raw.pause);
-        soundplayer.start();
-        soundplayer.release();
-        musicplayer.release();
+        //soundplayer.start();
         onPause = elapsedtime;
         try {
             m_gameThread.join();
@@ -272,10 +362,8 @@ public class GameView extends SurfaceView implements Runnable {
     }
     public void resume() {
         m_playing = true;
-            soundplayer = MediaPlayer.create(m_context,R.raw.unpause);
-            soundplayer.start();
-            soundplayer.release();
-            musicplayer.release();
+//        soundplayer.start();
+//        musicplayer.start();
             timePaused = (int) ((SystemClock.elapsedRealtime() - base) / 1000) - onPause;
             m_gameThread = new Thread(this);
             m_gameThread.start();

@@ -24,16 +24,21 @@ public class GameActivity extends Activity {
 
     }
 
+
     @Override
     protected void onPause(){
         super.onPause();
+        m_gameView.pauseMusic();
         m_gameView.pause();
+
     }
 
     @Override
     protected void onResume(){
         super.onResume();
+        m_gameView.resumeMusic();
         m_gameView.resume();
+
     }
 
 

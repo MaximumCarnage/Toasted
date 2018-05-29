@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.IOException;
+
 public class LoseActivity extends AppCompatActivity implements View.OnClickListener{
     MediaPlayer soundplayer;
     private int score;
@@ -22,7 +24,7 @@ public class LoseActivity extends AppCompatActivity implements View.OnClickListe
 
         scoreBox.setText("FinalScore= "+score);
         buttonMenu.setOnClickListener(this);
-
+        soundplayer = MediaPlayer.create(this,R.raw.toasterslide);
     }
 
 
@@ -33,10 +35,8 @@ public class LoseActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        soundplayer = MediaPlayer.create(this,R.raw.toasterslide);
+
         soundplayer.start();
-        soundplayer.stop();
-        soundplayer.release();
 
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);

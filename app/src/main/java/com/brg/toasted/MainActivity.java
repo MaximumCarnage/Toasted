@@ -10,7 +10,7 @@ import android.widget.Button;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    MediaPlayer menuplayer,soundplayer;
+    MediaPlayer musicplayer,soundPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,24 +18,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         final Button buttonPlay = (Button)findViewById(R.id.buttonPlay);
         buttonPlay.setOnClickListener(this);
+        musicplayer = MediaPlayer.create(this,R.raw.menumusic);
+        musicplayer.start();
 
-        menuplayer = MediaPlayer.create(this,R.raw.menumusic);
-
-        menuplayer.start();
+        soundPlayer = MediaPlayer.create(this,R.raw.toasterslide);
 
     }
 
 
 
 
+
     @Override
     public void onClick(View view) {
-        soundplayer = MediaPlayer.create(this,R.raw.toasterslide);
-        soundplayer.start();
-        menuplayer.stop();
-        soundplayer.stop();
-        soundplayer.release();
-        menuplayer.release();
+        soundPlayer.start();
+        musicplayer.stop();
+        musicplayer.release();
         Intent i = new Intent(this, GameActivity.class);
         startActivity(i);
         finish();
@@ -43,12 +41,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
     public void clickexit(View v){
-        soundplayer = MediaPlayer.create(this,R.raw.toasterslide);
-        soundplayer.start();
-        menuplayer.stop();
-        soundplayer.stop();
-        soundplayer.release();
-        menuplayer.release();
+        soundPlayer.start();
+        musicplayer.stop();
+        musicplayer.release();
         moveTaskToBack(true);
         android.os.Process.killProcess( android.os.Process.myPid());
         System.exit(1);
